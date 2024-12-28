@@ -15,29 +15,26 @@ def read_annotations(file):
         min_tracking_confidence=0.75,
         max_num_hands=1)
     with open(file, mode='r') as csvfile:
-        csvreader = csv.reader(csvfile)
-        next(csvreader)  # Skip the first row
-        count = 0
-        for row in csvreader:
-            process_row(f'./dataset/train/{row[0]}', hands, row[3])
-            # process row
-        print(f'Processed {count} images, data stored in train.csv')
+        with open('testing.csv', mode='a', newline='') as file:
+            csvreader = csv.reader(csvfile)
+            writer = csv.writer(file)
+            next(csvreader)  # Skip the first row
+            count = 0
+            header = ['filename']
+            for i in range(21):
+                header.append(f'landmark_{i}_x')
+                header.append(f'landmark_{i}_y')
+                header.append(f'landmark_{i}_z')
+            header.append('classname')
+            writer.writerow(header)
+            for row in csvreader:
+                process_row(f'./dataset/test/{row[0]}', hands, row[3], writer)
+                count += 1;
+                # process row
+            print(f'Processed {count} images, data stored in testing.csv')
 
 
-def write_frame_entry(landmarks, filename, classname):
-    with open('training.csv', mode='a', newline='') as file:
-        writer = csv.writer(file)
-        print(f'Reading {filename}\n')
-        result_row = [f'{filename}']
-        for landmark in landmarks.landmark:
-            result_row.append(landmark.x)
-            result_row.append(landmark.y)
-            result_row.append(landmark.z)
-        result_row.append(classname)
-        writer.writerow(result_row)
-
-
-def process_row(filename, hands, classname):
+def process_row(filename, hands, classname,writer):
     frame = cv2.imread(filename)
 
     img = cv2.resize(frame, (640, 480))
@@ -50,22 +47,21 @@ def process_row(filename, hands, classname):
 
     # Process the RGB image
     results = hands.process(imgRGB)
+    # If no hand landmarks are found, it will skip over it
     if results.multi_hand_landmarks:
-        for hand_landmarks in results.multi_hand_landmarks:
+        for landmarks in results.multi_hand_landmarks:
             # Write landmarks to CSV
-            write_frame_entry(hand_landmarks, filename, classname)
-
-            # # Draw circles for each landmark
-            # for landmark in hand_landmarks.landmark:
-            #     x = int(landmark.x * 640)
-            #     y = int(landmark.y * 480)
-            #     cv2.circle(img, (x, y), 5, (0, 255, 0), -1)
-
-        # # Save annotated image
-        # cv2.imwrite(f"frames/frame{count}.jpg", img)
+            print(f'Reading {filename}\n')
+            result_row = [f'{filename}']
+            for landmark in landmarks.landmark:
+                result_row.append(landmark.x)
+                result_row.append(landmark.y)
+                result_row.append(landmark.z)
+            result_row.append(classname)
+            writer.writerow(result_row)
 
 def main():
-    read_annotations('dataset/train/_annotations.csv')
+    read_annotations('dataset/test/_annotations.csv')
     pass
 
 

@@ -14,6 +14,6 @@ pkgs.mkShell {
   #   export LD_LIBRARY_PATH=$(for p in ${pkgs.zlib} ${pkgs.gcc} ${pkgs.opencv} ${pkgs.glib}; do echo -n "$p/lib:"; done)$LD_LIBRARY_PATH
   # '';
   shellHook = ''
-    export LD_LIBRARY_PATH=$(for p in ${pkgs.zlib} ${pkgs.gcc} ${pkgs.opencv} ${pkgs.glib}; do echo -n "$p/lib:"; done)$LD_LIBRARY_PATH
+    export LD_LIBRARY_PATH=$(for p in ${pkgs.zlib} ${pkgs.gcc} ${pkgs.opencv} ${pkgs.glib} ${pkgs.stdenv.cc.cc.lib}; do echo -n "$p/lib:"; done)$LD_LIBRARY_PATH
   '';
 }
