@@ -1,0 +1,14 @@
+[project]
+name = "aiproject"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "joblib>=1.4.2",
+    "mediapipe>=0.10.20",
+    "numpy>=1.26.4",
+    "opencv-python>=4.10.0.84",
+    "pandas>=2.2.3",
+    "scikit-learn>=1.6.0",
+]
