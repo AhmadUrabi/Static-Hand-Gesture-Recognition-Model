@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "joblib>=1.4.2",
+    "matplotlib>=3.10.0",
     "mediapipe>=0.10.20",
     "numpy>=1.26.4",
     "opencv-python>=4.10.0.84",

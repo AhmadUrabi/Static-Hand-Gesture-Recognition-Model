@@ -1,6 +1,9 @@
 import mediapipe as mp
 import csv
 import cv2
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.decomposition import PCA
 
 def read_annotations(file, setName, fileName):
     mpHands = mp.solutions.hands

@@ -11,23 +11,14 @@ test_df = pd.read_csv("testing.csv")
 x_test = test_df.iloc[:, 1:-1]
 y_test = test_df.iloc[:, -1]
 
-# 0: "Two"
-# 1: "Two with palm"
-# 2: "Two with palm down"
-# 3: "Arms Sideways Facing different sides"
-# 4: "Yes"
-# 5: "Yesterday"
-# 6: "Head"
-# 7: "Inside"
-# 8: "Leg"
-# 9: "Medicine"
-# 10: "No"
-# 11: "Sick"
-# 12: "Snot"
-# 13: "Surgery"
 
 mp_hands = mp.solutions.hands
-hands = mp_hands.Hands()
+hands = mp_hands.Hands(
+    static_image_mode=True,
+    model_complexity=1,
+    min_detection_confidence=0.75,
+    min_tracking_confidence=0.75,
+    max_num_hands=2)
 
 cap = cv2.VideoCapture(0)
 
@@ -37,7 +28,7 @@ while cap.isOpened():
         print("Ignoring empty camera frame.")
         continue
 
-    image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+    image = cv2.cvtColor(cv2.flip(cv2.resize(image, (640, 640)), 1), cv2.COLOR_BGR2RGB)
     image.flags.writeable = False
     results = hands.process(image)
 
